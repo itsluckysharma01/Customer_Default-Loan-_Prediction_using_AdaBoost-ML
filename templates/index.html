@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Default Prediction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>🏦 Loan Default Prediction System</h1>
+                <p class="subtitle">AI-Powered Credit Risk Assessment using AdaBoost</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="form-section">
+                <h2>Customer & Loan Information</h2>
+                <form id="predictionForm">
+                    
+                    <!-- Personal Information -->
+                    <div class="form-group-section">
+                        <h3>📋 Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customer_age">Age *</label>
+                                <input type="number" id="customer_age" name="customer_age" required min="18" max="100" placeholder="e.g., 35">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customer_income">Annual Income ($) *</label>
+                                <input type="number" id="customer_income" name="customer_income" required min="0" step="1000" placeholder="e.g., 50000">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="home_ownership">Home Ownership *</label>
+                                <select id="home_ownership" name="home_ownership" required>
+                                    <option value="">Select...</option>
+                                    <option value="RENT">Rent</option>
+                                    <option value="OWN">Own</option>
+                                    <option value="MORTGAGE">Mortgage</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="employment_duration">Employment Duration (years) *</label>
+                                <input type="number" id="employment_duration" name="employment_duration" required min="0" max="50" step="0.5" placeholder="e.g., 5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loan Information -->
+                    <div class="form-group-section">
+                        <h3>💰 Loan Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="loan_intent">Loan Purpose *</label>
+                                <select id="loan_intent" name="loan_intent" required>
+                                    <option value="">Select...</option>
+                                    <option value="PERSONAL">Personal</option>
+                                    <option value="EDUCATION">Education</option>
+                                    <option value="MEDICAL">Medical</option>
+                                    <option value="VENTURE">Business Venture</option>
+                                    <option value="HOMEIMPROVEMENT">Home Improvement</option>
+                                    <option value="DEBTCONSOLIDATION">Debt Consolidation</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loan_grade">Loan Grade *</label>
+                                <select id="loan_grade" name="loan_grade" required>
+                                    <option value="">Select...</option>
+                                    <option value="A">A (Best)</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G (Worst)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="loan_amnt">Loan Amount ($) *</label>
+                                <input type="number" id="loan_amnt" name="loan_amnt" required min="1000" step="500" placeholder="e.g., 10000">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loan_int_rate">Interest Rate (%) *</label>
+                                <input type="number" id="loan_int_rate" name="loan_int_rate" required min="0" max="50" step="0.01" placeholder="e.g., 5.5">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="loan_percent_income">Loan to Income Ratio *</label>
+                                <input type="number" id="loan_percent_income" name="loan_percent_income" required min="0" max="1" step="0.01" placeholder="e.g., 0.20">
+                                <small>Enter as decimal (e.g., 0.20 for 20%)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit History -->
+                    <div class="form-group-section">
+                        <h3>📊 Credit History</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="historical_default">Previous Default? *</label>
+                                <select id="historical_default" name="historical_default" required>
+                                    <option value="">Select...</option>
+                                    <option value="N">No</option>
+                                    <option value="Y">Yes</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="credit_history_length">Credit History Length (years) *</label>
+                                <input type="number" id="credit_history_length" name="credit_history_length" required min="0" max="50" step="0.5" placeholder="e.g., 10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-submit">
+                            <span class="btn-text">Predict Default Risk</span>
+                            <span class="loader" style="display: none;"></span>
+                        </button>
+                        <button type="reset" class="btn-reset">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="results-section" style="display: none;">
+                <h2>Prediction Results</h2>
+                <div id="resultsContent" class="results-content">
+                    <!-- Results will be injected here by JavaScript -->
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2026 Loan Default Prediction System | Powered by AdaBoost Machine Learning</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
